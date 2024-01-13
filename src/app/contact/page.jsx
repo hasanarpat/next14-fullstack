@@ -1,5 +1,11 @@
 import styles from "./page.module.css";
 import Image from "next/image";
+
+export const metadata = {
+  title: "Contact Crow",
+  description: "Developed by Crow",
+};
+
 function Contact() {
   return (
     <div className={styles.container}>

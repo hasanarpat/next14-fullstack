@@ -1,6 +1,11 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 
+export const metadata = {
+  title: "About Crow",
+  description: "Developed by Crow",
+};
+
 export default function About() {
   return (
     <div className={styles.container}>

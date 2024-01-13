@@ -1,48 +1,53 @@
+import PostUser from "@/components/postUser/PostUser";
 import styles from "./page.module.css";
 import Image from "next/image";
-export default function SingleBlog() {
+import { Suspense } from "react";
+import { getPost } from "@/lib/data";
+const getData = async (id) => {
+  const res = await fetch(`http://localhost:3000/api/blog/${id}`);
+
+  if (!res.ok) {
+    throw new Error("Something went wrong");
+  }
+  return res.json();
+};
+
+export const generateMetadata = async ({ params }) => {
+  const { slug } = params;
+  const post = await getPost(slug);
+  return {
+    title: post.heading,
+    description: post.desc,
+  };
+};
+
+export default async function SingleBlog({ params }) {
+  const { slug } = params;
+  const post = await getData(slug);
   return (
     <div className={styles.container}>
       <div className={styles.imageContainer}>
-        <Image
-          alt="banner"
-          src="https://images.pexels.com/photos/19298991/pexels-photo-19298991/free-photo-of-cowboy-on-a-field.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load"
-          fill
-          className={styles.img}
-        />
+        <Image alt="banner" src={post.img} fill className={styles.img} />
       </div>
       <div className={styles.textContainer}>
-        <h1 className={styles.title}>Title</h1>
-
+        <h1 className={styles.title}>
+          {post.heading ? post.heading : "Hello World"}
+        </h1>
         <div className={styles.detail}>
-          <Image
-            alt="avatar"
-            src="https://images.pexels.com/photos/19298991/pexels-photo-19298991/free-photo-of-cowboy-on-a-field.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load"
-            width={50}
-            height={50}
-            className={styles.avatar}
-          />
-          <div className={styles.authorDetail}>
-            <span className={styles.detailTitle}>Author</span>
-            <span className={styles.detailValue}>Terry Jeferson</span>
-          </div>
+          <Suspense fallback={<div>Loading ...</div>}>
+            <PostUser userId={post.userId} />
+          </Suspense>
           <div className={styles.authorDetail}>
             <span className={styles.detailTitle}>Published</span>
-            <span className={styles.detailValue}>01.01.2024</span>
+            <span className={styles.detailValue}>
+              {post.createdAt
+                ? post.createdAt.toString().slice(4, 16)
+                : "02 June 2023"}
+            </span>
           </div>
         </div>
         <div className={styles.content}>
-          <p>
-            Non officia culpa et in exercitation duis amet dolore commodo cillum
-            voluptate occaecat qui exercitation. Ipsum laboris veniam duis
-            laborum mollit ea tempor ex labore. Nostrud sunt consectetur aliquip
-            deserunt nostrud fugiat. Commodo ut est anim commodo irure duis
-            minim. Culpa consectetur quis proident in cupidatat excepteur et
-            officia quis elit qui tempor culpa. Veniam laboris quis
-            reprehenderit anim non labore exercitation elit amet cillum. Sit
-            minim id esse irure pariatur in Lorem et non consequat magna qui
-            laboris.
-          </p>
+          <p>{post.desc}</p>
         </div>
       </div>
     </div>

@@ -42,13 +42,8 @@
   font-weight: bold;
 }
 
-.detailTitle {
+.detailValue {
   font-weight: 500;
-}
-
-.avatar {
-  border-radius: 50px;
-  object-fit: cover;
 }
 
 .content {

@@ -6,7 +6,10 @@ import Footer from "@/components/footer/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Crow",
+  title: {
+    default: "Crow",
+    template: "%s",
+  },
   description: "Developed by Crow",
 };
 
